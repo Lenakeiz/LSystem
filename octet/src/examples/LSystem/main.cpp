@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::LSystem app(argc, argv);
+  LSS::LSystem app(argc, argv);
   app.init();
 
   // open windows
