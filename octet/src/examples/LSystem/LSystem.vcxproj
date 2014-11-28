@@ -218,6 +218,7 @@
     <ClInclude Include="LSystem.h" />
     <ClInclude Include="TextReader.h" />
     <ClInclude Include="TreeContext.h" />
+    <ClInclude Include="TreeRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl" />

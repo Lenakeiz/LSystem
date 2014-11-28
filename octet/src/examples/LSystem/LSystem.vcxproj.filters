@@ -434,7 +434,12 @@
     <ClInclude Include="TextReader.h">
       <Filter>LSS</Filter>
     </ClInclude>
-    <ClInclude Include="TreeContext.h" />
+    <ClInclude Include="TreeContext.h">
+      <Filter>LSS</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeRenderer.h">
+      <Filter>LSS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">

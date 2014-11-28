@@ -1,0 +1,4 @@
+Alphabet{F}
+Axiom{F}
+Rule{F=F[+F]F[-F]F}
+;
