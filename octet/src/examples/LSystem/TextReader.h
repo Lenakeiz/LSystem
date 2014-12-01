@@ -62,7 +62,7 @@ namespace LSS{
       {
          std::string ciao = "C:/Users/Andrea/Documents/prova.txt";
          printf("%s",ciao.c_str());
-         //std::ifstream fileone(ciao.c_str());
+         
          file.open(ciao.c_str(), std::ios::in);
          if (file.is_open())
          {
@@ -70,9 +70,10 @@ namespace LSS{
          }
       }
 
-      void ParseStructure(TreeContext* tc){
-          tc = new TreeContext();
+      TreeContext* ParseStructure(){
 
+         TreeContext* tc = new TreeContext();
+         
          std::string line;
          while (std::getline(file, line)){
 
@@ -95,6 +96,9 @@ namespace LSS{
                ParseRule(*tc, line);
             }
          }
+         
+         return tc;
+
       }
 
       void CloseFile(){

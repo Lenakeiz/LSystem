@@ -39,8 +39,11 @@ namespace LSS {
       app_scene->create_default_camera_and_lights();
 
       tr = new TextReader("lsystemassets/tree1.txt");
-      tr->ParseStructure(tc);
+      tc = tr->ParseStructure();
       tr->CloseFile();
+
+      tc->CalculateNextIteration();
+      tc->CalculateNextIteration(2);
 
    }
 

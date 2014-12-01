@@ -2,6 +2,8 @@
 #include "../../octet.h"
 namespace LSS{
    
+   static const int DEBUG_ITERATION = 1;
+
    struct RuleEquation{
       char alphabet;
       std::string rule;
@@ -12,7 +14,7 @@ namespace LSS{
     
    
    private:
-      unsigned currentStep;
+      unsigned currentStep = 0;
    
    public:
 
@@ -26,12 +28,14 @@ namespace LSS{
 
       /// This function calculates the next step of the tree (can be an upward, downward movement), we save the last file configuration before calculating the current
       void CalculateNextIteration(unsigned step = 1){
+         
+         int deb = 0;
+         this->currentStep = step;
+
          if (step == 0){
             assert("Impossible to calculate rule");
          }
          else if (step == 1){
-            currentStep = step;
-            //lastIteration.empty();
             currentIteration = axiom;            
          }
          else{
@@ -42,16 +46,17 @@ namespace LSS{
             {
                char currChar = *it;
                bool find = false;
-
+               std::string currentRule = "";
                //Looking if current simbol is in the alphabet
-               for (unsigned i = 0; i < alphabet.size(); i++)
-               {
+               for (unsigned i = 0; i < alphabet.size(); i++){
                   if (currChar == alphabet[i]){
                      find = true;
                      //getting the rule according to the letter just found
-                     for (unsigned i = 0; i < rules.size(); i++)
-                     {
-                        
+                     for (unsigned i = 0; i < rules.size(); i++){
+                        if(rules[i].alphabet == currChar)
+                        {
+                           currentRule = rules[i].rule;
+                        }
                      }
                   }
                }
@@ -61,15 +66,24 @@ namespace LSS{
                   nextIteration.push_back(*it);
 
                }
-               else{
-               
+               else if(currentRule != ""){
+                  
+                  for (std::string::iterator it = currentRule.begin(); it != currentRule.end(); ++it)
+                  {
+                     nextIteration.push_back(*it);
+                  }
+
                }
-               
+               else{
+
+                  if (DEBUG_ITERATION == 1){
+                     printf("Founded %c, but not its rule\n", currChar);
+                  }
+
+               }
             }
-            /*for (unsigned i = 0; i < currentIteration.size(); i++)
-            {
-               char currChar = currentIteration.
-            }*/
+
+            currentIteration = nextIteration;
 
          }
       }
