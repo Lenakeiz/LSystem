@@ -20,7 +20,37 @@ namespace LSS {
       TreeContext* tc;
 
       void AcquireInputs(){
-         
+         if (is_key_down('1')){
+         }
+         else if (is_key_down('2')){
+
+         }
+         else if (is_key_down('3')){
+
+         }
+         else if (is_key_down('4')){
+
+         }
+         else if (is_key_down('5')){
+
+         }
+         else if (is_key_down('6')){
+
+         }
+         else if (is_key_down('7')){
+
+         }
+         else if (is_key_down('8')){
+
+         }
+         else{
+            if (is_key_down(octet::key_up)){
+               if (tc->)
+            }
+            else if (is_key_down(octet::key_down)){
+
+            }
+         }
       }
 
   public:
