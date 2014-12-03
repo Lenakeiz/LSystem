@@ -60,10 +60,11 @@ namespace LSS{
 
       TextReader(octet::string path)
       {
-         std::string ciao = "C:/Users/Andrea/Documents/prova.txt";
-         printf("%s",ciao.c_str());
+        
+         //std::string ciao = "C:/Users/Andrea/Documents/prova.txt";
+         printf("%s",path.c_str());
          
-         file.open(ciao.c_str(), std::ios::in);
+         file.open(path.c_str(), std::ios::in);
          if (file.is_open())
          {
             printf("File opened!");
@@ -94,6 +95,10 @@ namespace LSS{
             found = line.find("Rule");
             if (found != std::string::npos){
                ParseRule(*tc, line);
+            }
+            found = line.find("Angle");
+            if (found != std::string::npos){
+               //ParseRule(*tc, line);
             }
          }
          

@@ -15,7 +15,7 @@ namespace LSS{
    
    private:
 
-      unsigned currentStep = -1;
+      unsigned currentStep = 0;
    
    public:
 
@@ -26,17 +26,39 @@ namespace LSS{
 
       octet::dynarray<octet::dynarray<char>> iterations;
       
+      int GetCurrentStep(){
+         return currentStep;
+      }
+
+      bool CheckNewIteration(){
+         return currentStep + 1 >= iterations.size();            
+      }
+
+      /// Setting new current step for drawing the tree
+      void SetCurrentStep(bool direction){
+
+         if (direction){
+            currentStep += 1;
+            if (CheckNewIteration){
+               CalculateNextIteration();
+            }
+         }
+         else{
+            currentStep -= 1;
+            if (currentStep <= -1)
+            currentStep = 0;
+         }
+
+      }
+
       /// This function calculates the next step of the tree (can be an upward, downward movement), we save the last file configuration before calculating the current
       void CalculateNextIteration(){
          
-         int deb = 0;
-         this->currentStep = currentStep + 1 ;
-
          if (currentStep == -1){
             assert("Impossible to calculate rule");
          }
-         else if (currentStep == 1){
-            iterations[0] = axiom;            
+         else if (currentStep == 0){
+            iterations.push_back(axiom);            
          }
          else{
             
@@ -84,9 +106,14 @@ namespace LSS{
          }
       }
 
+      void DebugPrint(){
+         printf("Current iteration is: %s \n", iterations[currentStep]);
+      }
+
       TreeContext()
       {
-         
+         currentStep = 0;
+         CalculateNextIteration();
       }
 
       ~TreeContext()

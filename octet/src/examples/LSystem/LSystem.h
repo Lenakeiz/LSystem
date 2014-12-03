@@ -21,35 +21,41 @@ namespace LSS {
 
       void AcquireInputs(){
          if (is_key_down('1')){
+            tr = new TextReader("lsystemassets/tree1.txt");
          }
          else if (is_key_down('2')){
-
+            tr = new TextReader("lsystemassets/tree2.txt");
          }
          else if (is_key_down('3')){
-
+            tr = new TextReader("lsystemassets/tree3.txt");
          }
          else if (is_key_down('4')){
-
-         }
+            tr = new TextReader("lsystemassets/tree4.txt");
+         }  
          else if (is_key_down('5')){
-
+            tr = new TextReader("lsystemassets/tree5.txt");
          }
          else if (is_key_down('6')){
-
+            tr = new TextReader("lsystemassets/tree6.txt");
          }
          else if (is_key_down('7')){
-
+            tr = new TextReader("lsystemassets/tree7.txt");
          }
          else if (is_key_down('8')){
-
+            tr = new TextReader("lsystemassets/tree8.txt");
          }
          else{
+
+            int step = tc->GetCurrentStep();
             if (is_key_down(octet::key_up)){
-               if (tc->)
-            }
-            else if (is_key_down(octet::key_down)){
+               
+               tc->SetCurrentStep(true);
 
             }
+            else if (is_key_down(octet::key_down)){
+               tc->SetCurrentStep(false);
+            }
+
          }
       }
 
@@ -65,15 +71,13 @@ namespace LSS {
 
     /// this is called once OpenGL is initialized
    void app_init() {
+
       app_scene = new octet::visual_scene();
       app_scene->create_default_camera_and_lights();
 
       tr = new TextReader("lsystemassets/tree1.txt");
       tc = tr->ParseStructure();
       tr->CloseFile();
-
-      tc->CalculateNextIteration();
-      tc->CalculateNextIteration(2);
 
    }
 
