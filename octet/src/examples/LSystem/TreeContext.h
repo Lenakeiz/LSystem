@@ -34,12 +34,17 @@ namespace LSS{
          return currentStep + 1 >= iterations.size();            
       }
 
+
+      void Initialize(){
+         currentStep = 0;
+         CalculateNextIteration();
+      }
       /// Setting new current step for drawing the tree
       void SetCurrentStep(bool direction){
 
          if (direction){
             currentStep += 1;
-            if (CheckNewIteration){
+            if (CheckNewIteration()){
                CalculateNextIteration();
             }
          }
@@ -54,16 +59,24 @@ namespace LSS{
       /// This function calculates the next step of the tree (can be an upward, downward movement), we save the last file configuration before calculating the current
       void CalculateNextIteration(){
          
+         octet::dynarray<char> nextIteration;
+
          if (currentStep == -1){
             assert("Impossible to calculate rule");
          }
+
          else if (currentStep == 0){
-            iterations.push_back(axiom);            
+
+            for (unsigned i = 0; i < axiom.size(); i++)
+            {
+               nextIteration.push_back(axiom[i]);
+            }
+
+            iterations.push_back(nextIteration);
          }
+
          else{
             
-            octet::dynarray<char> nextIteration;
-
             for (octet::dynarray<char>::iterator it = iterations[iterations.size() - 1].begin(); it != iterations[iterations.size() - 1].end(); ++it)
             {
                char currChar = *it;
@@ -88,11 +101,13 @@ namespace LSS{
                   nextIteration.push_back(*it);
 
                }
-               else if(currentRule != ""){                  
+               else if(currentRule != ""){
+
                   for (std::string::iterator it = currentRule.begin(); it != currentRule.end(); ++it)
                   {
                      nextIteration.push_back(*it);
                   }
+
                }
                else{
                   if (DEBUG_ITERATION == 1){
@@ -110,10 +125,32 @@ namespace LSS{
          printf("Current iteration is: %s \n", iterations[currentStep]);
       }
 
+      void Reset(){
+         
+         if (!alphabet.empty()){
+            alphabet.reset();
+         }
+         if (!axiom.empty()){
+            axiom.reset();
+         }
+         if (!rules.empty()){
+            rules.reset();
+         }
+         if (!iterations.empty()){
+            for (unsigned i = 0; i < iterations.size(); i++)
+            {
+               if (!iterations[i].empty()){
+                  iterations[i].reset();
+               }
+            }
+            iterations.reset();
+         }
+
+      }
+
       TreeContext()
       {
-         currentStep = 0;
-         CalculateNextIteration();
+         //Initialize();
       }
 
       ~TreeContext()

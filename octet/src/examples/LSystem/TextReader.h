@@ -58,20 +58,44 @@ namespace LSS{
 
    public:
 
-      TextReader(octet::string path)
+      TextReader(const octet::string& path)
       {
-        
-         //std::string ciao = "C:/Users/Andrea/Documents/prova.txt";
-         printf("%s",path.c_str());
-         
-         file.open(path.c_str(), std::ios::in);
-         if (file.is_open())
-         {
-            printf("File opened!");
+         //printf("%s",path.c_str());
+         OpenFile(path);
+      }
+
+      void ParseStructure(TreeContext& tc){
+
+         std::string line;
+         while (std::getline(file, line)){
+
+            //break as soon as we find the first break
+            /*if (line.compare(";") == 0)
+            break;*/
+
+            std::size_t found;
+
+            found = line.find("Alphabet");
+            if (found != std::string::npos){
+               ParseAlphabet(tc, line);
+            }
+            found = line.find("Axiom");
+            if (found != std::string::npos){
+               ParseAxiom(tc, line);
+            }
+            found = line.find("Rule");
+            if (found != std::string::npos){
+               ParseRule(tc, line);
+            }
+            found = line.find("Angle");
+            if (found != std::string::npos){
+               //ParseRule(*tc, line);
+            }
          }
       }
 
-      TreeContext* ParseStructure(){
+      /*
+         TreeContext* ParseStructure(){
 
          TreeContext* tc = new TreeContext();
          
@@ -79,7 +103,7 @@ namespace LSS{
          while (std::getline(file, line)){
 
             //break as soon as we find the first break
-            if (line.compare(";") == 0)
+            //if (line.compare(";") == 0)
                break;
 
             std::size_t found;
@@ -104,6 +128,19 @@ namespace LSS{
          
          return tc;
 
+      }*/
+
+      void OpenFile(const octet::string& path){
+
+         
+         file.open(path.c_str(), std::ios::in);
+         if (file.is_open())
+         {
+            printf("File opened!");
+         }
+         else{
+            assert("error initializing the file");
+         }
       }
 
       void CloseFile(){

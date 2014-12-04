@@ -16,47 +16,99 @@ namespace LSS {
       // scene for drawing box
       octet::ref<octet::visual_scene> app_scene;
 
+      char currTree = '1';
+
       TextReader* tr;
       TreeContext* tc;
 
       void AcquireInputs(){
-         if (is_key_down('1')){
-            tr = new TextReader("lsystemassets/tree1.txt");
+         if (is_key_down('1') && currTree != '1'){
+            currTree = '1';
+            tr->OpenFile("../../../lsystemassets/tree1.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }
-         else if (is_key_down('2')){
-            tr = new TextReader("lsystemassets/tree2.txt");
+         else if (is_key_down('2') && currTree != '2'){
+            currTree = '2';
+            tr->OpenFile("../../../lsystemassets/tree2.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }
-         else if (is_key_down('3')){
-            tr = new TextReader("lsystemassets/tree3.txt");
+         else if (is_key_down('3') && currTree != '3'){
+            currTree = '3';
+            tr->OpenFile("../../../lsystemassets/tree3.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }
-         else if (is_key_down('4')){
-            tr = new TextReader("lsystemassets/tree4.txt");
+         else if (is_key_down('4') && currTree != '4'){
+            currTree = '4';
+            tr->OpenFile("../../../lsystemassets/tree4.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }  
-         else if (is_key_down('5')){
-            tr = new TextReader("lsystemassets/tree5.txt");
+         else if (is_key_down('5') && currTree != '5'){
+            currTree = '5';
+            tr->OpenFile("../../../lsystemassets/tree5.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }
-         else if (is_key_down('6')){
-            tr = new TextReader("lsystemassets/tree6.txt");
+         else if (is_key_down('6') && currTree != '6'){
+            currTree = '6';
+            tr->OpenFile("../../../lsystemassets/tree6.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }
-         else if (is_key_down('7')){
-            tr = new TextReader("lsystemassets/tree7.txt");
+         else if (is_key_down('7') && currTree != '7'){
+            currTree = '7';
+            tr->OpenFile("../../../lsystemassets/tree7.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }
-         else if (is_key_down('8')){
-            tr = new TextReader("lsystemassets/tree8.txt");
+         else if (is_key_down('8') && currTree != '8'){
+            currTree = '8';
+            tr->OpenFile("../../../lsystemassets/tree8.txt");
+            //tc->Reset();
+            tc = new TreeContext();
+            tr->ParseStructure(*tc);
+            tc->Initialize();
+            tr->CloseFile();
          }
          else{
 
-            int step = tc->GetCurrentStep();
             if (is_key_down(octet::key_up)){
                
                tc->SetCurrentStep(true);
 
             }
             else if (is_key_down(octet::key_down)){
+
                tc->SetCurrentStep(false);
+
             }
 
          }
+
       }
 
   public:
@@ -75,10 +127,11 @@ namespace LSS {
       app_scene = new octet::visual_scene();
       app_scene->create_default_camera_and_lights();
 
-      tr = new TextReader("lsystemassets/tree1.txt");
-      tc = tr->ParseStructure();
+      tc = new TreeContext();
+      tr = new TextReader("../../../lsystemassets/tree1.txt");
+      tr->ParseStructure(*tc);
       tr->CloseFile();
-
+      tc->Initialize();
    }
 
     /// this is called to draw the world
