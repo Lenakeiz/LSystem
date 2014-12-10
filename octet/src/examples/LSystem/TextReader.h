@@ -56,6 +56,17 @@ namespace LSS{
 
    }
 
+   void ParseAngle(TreeContext& tc, std::string& currString){
+
+      std::size_t start = currString.find("{");
+      std::size_t stop = currString.find("}");
+
+      std::string sub = currString.substr(start + 1, stop - start - 1);
+
+      tc.SetAngle(atof(sub.c_str()));
+
+   }
+
    public:
 
       TextReader(const octet::string& path)
@@ -89,7 +100,7 @@ namespace LSS{
             }
             found = line.find("Angle");
             if (found != std::string::npos){
-               //ParseRule(*tc, line);
+               ParseAngle(tc, line);
             }
          }
       }

@@ -1,5 +1,6 @@
 #pragma once
 #include "../../octet.h"
+
 namespace LSS{
    
    static const int DEBUG_ITERATION = 1;
@@ -15,7 +16,8 @@ namespace LSS{
    
    private:
 
-      unsigned currentStep = 0;
+      int currentStep = 0;
+      float angle = 22.7f;
    
    public:
 
@@ -24,21 +26,38 @@ namespace LSS{
       
       octet::dynarray<RuleEquation> rules;
 
-      octet::dynarray<octet::dynarray<char>> iterations;
-      
+      std::vector<std::vector<char>> iterations;
+      //octet::dynarray<octet::dynarray<char>> iterations;
+            
       int GetCurrentStep(){
          return currentStep;
       }
 
-      bool CheckNewIteration(){
-         return currentStep + 1 >= iterations.size();            
+      float GetAngle(){
+         return angle;
       }
 
+      void SetAngle(float ang){
+         angle = ang;
+      }
+
+      void ModifyAngle(bool direction){
+         angle = direction ? angle + 1.0f : angle - 1.0f;         
+      }
+
+      int GetStringLength(){
+         return iterations[currentStep].size();
+      }
+
+      bool CheckNewIteration(){
+         return currentStep >= iterations.size(); //Remember I always increase current step before this step. currentStep is the position inside the dinarray so currentStep = 0 -> size = 1      
+      }
 
       void Initialize(){
          currentStep = 0;
          CalculateNextIteration();
       }
+
       /// Setting new current step for drawing the tree
       void SetCurrentStep(bool direction){
 
@@ -51,7 +70,7 @@ namespace LSS{
          else{
             currentStep -= 1;
             if (currentStep <= -1)
-            currentStep = 0;
+               currentStep = 0;
          }
 
       }
@@ -59,7 +78,7 @@ namespace LSS{
       /// This function calculates the next step of the tree (can be an upward, downward movement), we save the last file configuration before calculating the current
       void CalculateNextIteration(){
          
-         octet::dynarray<char> nextIteration;
+         std::vector<char> nextIteration;
 
          if (currentStep == -1){
             assert("Impossible to calculate rule");
@@ -72,14 +91,16 @@ namespace LSS{
                nextIteration.push_back(axiom[i]);
             }
 
-            iterations.push_back(nextIteration);
+            
          }
 
          else{
             
-            for (octet::dynarray<char>::iterator it = iterations[iterations.size() - 1].begin(); it != iterations[iterations.size() - 1].end(); ++it)
+            std::vector<char> lastIteration = iterations.back();
+
+            for (unsigned  i = 0; i != lastIteration.size(); i++)
             {
-               char currChar = *it;
+               char currChar = lastIteration[i];
                bool find = false;
                std::string currentRule = "";
                
@@ -98,7 +119,7 @@ namespace LSS{
 
                if (!find){
 
-                  nextIteration.push_back(*it);
+                  nextIteration.push_back(currChar);
 
                }
                else if(currentRule != ""){
@@ -115,10 +136,10 @@ namespace LSS{
                   }
                }
             }
-
-            iterations.push_back(nextIteration);
-
          }
+
+         iterations.push_back(nextIteration);
+
       }
 
       void DebugPrint(){
@@ -136,27 +157,29 @@ namespace LSS{
          if (!rules.empty()){
             rules.reset();
          }
+
          if (!iterations.empty()){
             for (unsigned i = 0; i < iterations.size(); i++)
             {
                if (!iterations[i].empty()){
-                  iterations[i].reset();
+                  iterations[i].clear();
                }
             }
-            iterations.reset();
+            iterations.clear();
          }
 
       }
 
       TreeContext()
       {
-         //Initialize();
+         
       }
 
       ~TreeContext()
       {
 
       }
+
    };
 
 }

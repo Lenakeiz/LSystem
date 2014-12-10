@@ -1,0 +1,6 @@
+Alphabet{FX}
+Axiom{X}
+Angle{20.0}
+Rule{X=F[+X]F[-X]+X}
+Rule{F=FF}
+;

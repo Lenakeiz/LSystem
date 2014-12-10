@@ -1,0 +1,5 @@
+Alphabet{F}
+Axiom{F}
+Angle{25.7}
+Rule{F=F[+F]F[-F]F}
+;

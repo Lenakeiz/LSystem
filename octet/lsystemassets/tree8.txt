@@ -1,0 +1,5 @@
+Alphabet{F}
+Axiom{F-F-F-F}
+Angle{90.0}
+Rule{F=FF-F-F-F-FF}
+;
