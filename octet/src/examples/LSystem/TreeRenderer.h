@@ -23,6 +23,11 @@ namespace LSS{
    */
    
    struct my_vertex {
+      octet::vec3 pos;
+      //uint32_t color;
+   };
+
+   struct draw_vertex{
       octet::vec3p pos;
       uint32_t color;
    };
@@ -62,6 +67,7 @@ namespace LSS{
 
       octet::ref<octet::mesh> rend_mesh;
       int precision = 3;
+      float radius = 0.2f;
       octet::ref<octet::scene_node> node;
       octet::ref<octet::material> mat;
       octet::ref<octet::param_shader> shader;
@@ -164,21 +170,73 @@ namespace LSS{
          //rend_mesh = new octet::mesh();
 
          //Reserve space for the vertexes and indices
-         size_t num_vertices = struct_stack.size() * 2; //tree.GetStringLength() * 2;
+         size_t num_vertices = struct_stack.size() * precision * 2;
+         size_t num_indices = struct_stack.size() * precision * 2 * 3;
          //size_t num_indices = tree.GetStringLength() * 2;
-         rend_mesh->allocate(sizeof(my_vertex) * num_vertices, 0);
-         rend_mesh->set_params(sizeof(my_vertex), 0, num_vertices, GL_LINES, NULL);
+         rend_mesh->allocate(sizeof(draw_vertex) * num_vertices, sizeof(uint32_t) * num_indices);
+         rend_mesh->set_params(sizeof(draw_vertex), num_indices, num_vertices, GL_TRIANGLES, GL_UNSIGNED_INT);
 
          rend_mesh->clear_attributes();
          rend_mesh->add_attribute(octet::attribute::attribute_pos, 3, GL_FLOAT, 0);
          rend_mesh->add_attribute(octet::attribute::attribute_color, 4, GL_UNSIGNED_BYTE, 12, GL_TRUE);
             
          octet::gl_resource::wolock vlock(rend_mesh->get_vertices());
-         my_vertex *vtx = (my_vertex*)vlock.u8();
+         draw_vertex *vtx = (draw_vertex*)vlock.u8();
+         octet::gl_resource::wolock il(rend_mesh->get_indices());
+         uint32_t* idx = il.u32();
+
+         int numVtxs = 0;
 
          for (unsigned i = 0; i != struct_stack.size(); i++)
          {
-            vtx->pos = (struct_stack[i]->start).pos;
+
+            for (size_t j = 0; j < precision; ++j) {
+               //float r = 0.0f, g = 1.0f * i / precision, b = 1.0f;
+               float theta = j * 2.0f * 3.14159265f / precision;
+               octet::vec3 s = (struct_stack[i]->start).pos;
+               octet::vec3 e = (struct_stack[i]->end).pos;
+               vtx->pos = s + octet::vec3p(cosf(theta) * radius, 0, sinf(theta) * radius);
+               // printf("vtx bot %i: %f, %f, %f  ", i, vtx->pos.x(), vtx->pos.y(), vtx->pos.z());
+               vtx->color = make_color(150.0f, 75.0f, 0);
+               vtx++;
+               vtx->pos = e + octet::vec3p(cosf(theta) * radius, 0, sinf(theta) * radius);
+               // printf("vtx top %i: %f, %f, %f\n", i, vtx->pos.x(), vtx->pos.y(), vtx->pos.z());
+               if (struct_stack[i]->depth == 0){
+                  vtx->color = make_color(150.0f, 75.0f, 0);
+               }
+               else{
+                  vtx->color = make_color(0.0f, 1.0f, 0);
+               }
+               vtx++;
+            }
+
+            // make the triangles
+            uint32_t vn = 0;
+            for (size_t j = 0; j != precision; ++j) {
+               /*
+               1---------3
+               |       / |
+               |    /    |
+               | /       |
+               0---------2
+               */
+
+               idx[0] = vn + 0 + numVtxs;
+               idx[1] = ((vn + 3) % 6) + numVtxs;
+               idx[2] = vn + 1 + numVtxs;
+               idx += 3;
+               // printf("%u,%u,%u :", idx[-3], idx[-2], idx[-1]);
+               idx[0] = vn + 0 + numVtxs;
+               idx[1] = ((vn + 2) % 6) + numVtxs;
+               idx[2] = ((vn + 3) % 6) + numVtxs;
+               idx += 3;
+               // printf(" %u,%u,%u\n", idx[-3], idx[-2], idx[-1]);
+               vn += 2;
+            }
+            // this is number of vertices added
+            numVtxs += 6;
+
+            /*vtx->pos = (struct_stack[i]->start).pos;
 
             if (struct_stack[i]->depth >= 0){
                vtx->color = make_color(150.0f, 75.0f, 0);
@@ -196,7 +254,7 @@ namespace LSS{
             else{
                vtx->color = make_color(0.0f, 1.0f, 0);
             }
-            vtx++;
+            vtx++;*/
          }
 
       }
