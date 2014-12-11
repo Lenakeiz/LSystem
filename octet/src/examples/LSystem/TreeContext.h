@@ -45,8 +45,14 @@ namespace LSS{
          angle = direction ? angle + 1.0f : angle - 1.0f;         
       }
 
-      int GetStringLength(){
-         return iterations[currentStep].size();
+      int GetDrawingSize(){
+         int num = 0;
+         for (int i = 0; i < iterations[currentStep].size(); ++i){
+            if (iterations[currentStep][i] == 'F') {
+               ++num;
+            }
+         }
+         return num;
       }
 
       bool CheckNewIteration(){

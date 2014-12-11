@@ -150,9 +150,6 @@ namespace LSS {
       tr->CloseFile();
       tc->Initialize();
 
-      tc->SetCurrentStep(true);
-      tc->SetCurrentStep(true);
-
       PrepareTreeMesh();
 
       app_scene->add_child(render->GetNode());

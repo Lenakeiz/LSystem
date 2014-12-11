@@ -24,7 +24,7 @@ namespace LSS{
    
    struct my_vertex {
       octet::vec3p pos;
-      //uint32_t color;
+      uint32_t color;
    };
 
    class StorageBlock{
@@ -33,10 +33,18 @@ namespace LSS{
       
       my_vertex start;
       my_vertex end;
+      int depth;
       
-      StorageBlock(const my_vertex s,const my_vertex e){
+      StorageBlock(const my_vertex s, const my_vertex e){
          start = s;
          end = e;
+         depth = 0;
+      }
+
+      StorageBlock(const my_vertex s,const my_vertex e, int d){
+         start = s;
+         end = e;
+         depth = d;
       }
 
       StorageBlock(){}
@@ -53,11 +61,21 @@ namespace LSS{
       octet::dynarray<StorageBlock*> struct_stack;
 
       octet::ref<octet::mesh> rend_mesh;
+      int precision = 3;
       octet::ref<octet::scene_node> node;
       octet::ref<octet::material> mat;
       octet::ref<octet::param_shader> shader;
 
       const octet::vec3 dir_ = octet::vec3(0,1,0);
+
+      // converts floats into a RGBA 8 bit color, took from one of Andy's example
+      static uint32_t make_color(float r, float g, float b) {
+         return 0xff000000 + ((int)(r*255.0f) << 0) + ((int)(g*255.0f) << 8) + ((int)(b*255.0f) << 16);
+      }
+
+      void createCylinder(octet::mat4t_in mToWorld){
+         
+      }
 
       void Forward(){
 
@@ -82,6 +100,7 @@ namespace LSS{
 
       void CloseBranch(){
          transformStack.pop_back();
+         struct_stack.back()->depth = 1;
       }
 
       void Rotate(float angle){
@@ -97,7 +116,7 @@ namespace LSS{
          node = new octet::scene_node();
          shader = new octet::param_shader("shaders/default.vs", "shaders/simple_color.fs");
          //Chuck: not adding the shader to mat
-         mat = new octet::material(octet::vec4(1, 0, 0, 1));
+         mat = new octet::material(octet::vec4(1, 0, 0, 1),shader);
       }
 
       void CalculateVertices(TreeContext& tree){
@@ -152,7 +171,7 @@ namespace LSS{
 
          rend_mesh->clear_attributes();
          rend_mesh->add_attribute(octet::attribute::attribute_pos, 3, GL_FLOAT, 0);
-         //rend_mesh->add_attribute(octet::attribute::attribute_color, 4, GL_UNSIGNED_BYTE, 12, GL_TRUE);
+         rend_mesh->add_attribute(octet::attribute::attribute_color, 4, GL_UNSIGNED_BYTE, 12, GL_TRUE);
             
          octet::gl_resource::wolock vlock(rend_mesh->get_vertices());
          my_vertex *vtx = (my_vertex*)vlock.u8();
@@ -160,8 +179,23 @@ namespace LSS{
          for (unsigned i = 0; i != struct_stack.size(); i++)
          {
             vtx->pos = (struct_stack[i]->start).pos;
+
+            if (struct_stack[i]->depth >= 0){
+               vtx->color = make_color(150.0f, 75.0f, 0);
+            }
+            else{
+               vtx->color = make_color(0.0f, 1.0f, 0);
+            }
             vtx++;
+
             vtx->pos = (struct_stack[i]->end).pos;
+
+            if (struct_stack[i]->depth == 0){
+               vtx->color = make_color(150.0f, 75.0f, 0);
+            }
+            else{
+               vtx->color = make_color(0.0f, 1.0f, 0);
+            }
             vtx++;
          }
 
